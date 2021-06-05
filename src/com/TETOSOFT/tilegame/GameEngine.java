@@ -9,6 +9,7 @@ import com.TETOSOFT.input.*;
 import com.TETOSOFT.test.GameCore;
 import com.TETOSOFT.tilegame.sprites.*;
 
+
 /**
  * GameManager manages all parts of the game.
  */
@@ -17,9 +18,9 @@ public class GameEngine extends GameCore
     
     public static void main(String[] args) 
     {
-        new GameEngine().run();
- 
-        
+        javafx.application.Application.launch(com.TETOSOFT.tilegame.GameMenu.class);
+
+        //new GameEngine().run();
     }
     
     public static final float GRAVITY = 0.002f;
@@ -399,7 +400,8 @@ public class GameEngine extends GameCore
         if (powerUp instanceof PowerUp.Star) {
             // do something here, like give the player points
             collectedStars++;
-            if(collectedStars==100) 
+            //if(collectedStars==100)
+            if(collectedStars==8)
             {
                 numLives++;
                 collectedStars=0;
