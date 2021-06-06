@@ -37,6 +37,10 @@ public class GameEngine extends GameCore
     private GameAction restart;
     private int collectedStars=0;
     private int numLives=6;
+
+
+    ScoreTimer scoreTimer = new ScoreTimer();
+
    
     SoundManager st = new SoundManager();
     private Boolean gameover = false;
@@ -66,7 +70,8 @@ public class GameEngine extends GameCore
 
         //Sound.background.loop();
         startGame();
-       
+
+        scoreTimer.start();
     }
     
     
@@ -141,12 +146,17 @@ public class GameEngine extends GameCore
         g.setColor(Color.WHITE);
         g.drawString("Press ESC for EXIT.",10.0f,20.0f);
         g.setColor(Color.GREEN);
-        g.drawString("Coins: "+collectedStars,300.0f,20.0f);
+        g.drawString("Coins: "+collectedStars,250.0f,20.0f);
         g.setColor(Color.YELLOW);
-        g.drawString("Lives: "+(numLives),500.0f,20.0f );
+        g.drawString("Lives: "+(numLives),400.0f,20.0f );
+        //TIMER
+        g.setColor(Color.RED);
+        g.drawString("Score: "+ scoreTimer.secondPassed,550.0f,20.0f);
+
         g.setColor(Color.WHITE);
         g.drawString("Level: "+mapLoader.currentMap,700.0f,20.0f);
-        
+
+
         if(gameover) {
 
             g.setColor(Color.black);

@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import com.TETOSOFT.graphics.ScreenManager;
+import com.TETOSOFT.tilegame.ScoreTimer;
 import com.TETOSOFT.tilegame.SoundManager;
 
 /**
@@ -97,8 +98,6 @@ public abstract class GameCore {
         window.setFont(new Font("Dialog", Font.PLAIN, FONT_SIZE));
         window.setBackground(Color.BLACK);
         window.setForeground(Color.WHITE);
-        
-        
 
         isRunning = true;
     }
