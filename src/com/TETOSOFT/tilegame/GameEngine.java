@@ -37,11 +37,8 @@ public class GameEngine extends GameCore
     private GameAction restart;
     private int collectedStars=0;
     private int numLives=6;
-
-
-    ScoreTimer scoreTimer = new ScoreTimer();
-
-   
+    ScoreTimer timer = new ScoreTimer();
+    private int score;
     SoundManager st = new SoundManager();
     private Boolean gameover = false;
 
@@ -71,7 +68,9 @@ public class GameEngine extends GameCore
         //Sound.background.loop();
         startGame();
 
-        scoreTimer.start();
+        timer.start();
+        
+        System.out.println(mapLoader.currentMap);
     }
     
     
@@ -151,28 +150,64 @@ public class GameEngine extends GameCore
         g.drawString("Lives: "+(numLives),400.0f,20.0f );
         //TIMER
         g.setColor(Color.RED);
-        g.drawString("Score: "+ scoreTimer.secondPassed,550.0f,20.0f);
+        g.drawString("Time: "+ timer.secondPassed,550.0f,20.0f);
 
         g.setColor(Color.WHITE);
         g.drawString("Level: "+mapLoader.currentMap,700.0f,20.0f);
+        
+        g.setColor(Color.CYAN);
+        g.drawString("Score: "+score,700.0f,50.0f);
 
 
         if(gameover) {
+        	
+        	String s1 = "Game Over";
+        	String s2 = "Press R to Restart";
+        	String s3 = "Press ESC to Exit";
 
             g.setColor(Color.black);
             g.fillRect(0, 0, screen.getWidth(), screen.getHeight());
             Font big = new Font("Helvetica", Font.BOLD, 50);
             Font small = new Font("Helvetica", Font.BOLD, 20);
+            FontMetrics f = g.getFontMetrics(big);
+            FontMetrics f2 = g.getFontMetrics(small);
             g.setColor(Color.white);
             g.setFont(big);
-            g.drawString("Game Over", screen.getWidth()/3, screen.getHeight()/2);
+            g.drawString(s1, (screen.getWidth() - f.stringWidth(s1))/2, screen.getHeight()/2);
             g.setColor(Color.white);
             g.setFont(small);
-            g.drawString("Press R to Restart", screen.getWidth()/3, screen.getHeight()/2 + 50);
+            g.drawString(s2, (screen.getWidth() - f2.stringWidth(s2))/2, screen.getHeight()/2 + 50);
             g.setColor(Color.white);
             g.setFont(small);
-            g.drawString("Press ESC to Exit", screen.getWidth()/3, screen.getHeight()/2 + 100);
+            g.drawString(s3, (screen.getWidth() - f2.stringWidth(s3))/2, screen.getHeight()/2 + 100);
             
+        } 
+        
+        
+        if (mapLoader.currentMap == 5) {
+             String cm = "Congratulations";
+             String scoreString = "Your Score is " + score; 
+             String s2 = "Press R to Restart";
+          	 String s3 = "Press ESC to Exit";
+        	 g.setColor(Color.black);
+             g.fillRect(0, 0, screen.getWidth(), screen.getHeight());
+             Font big = new Font("Helvetica", Font.BOLD, 50);
+             Font small = new Font("Helvetica", Font.BOLD, 20);
+             FontMetrics fm = g.getFontMetrics(big);
+             FontMetrics fm2 = g.getFontMetrics(small);
+             g.setColor(Color.white);
+             g.setFont(big);
+             g.drawString(cm, (screen.getWidth() - fm.stringWidth(cm))/2 , screen.getHeight()/3);
+             g.setColor(Color.yellow);
+             g.setFont(small);
+             g.drawString(scoreString, (screen.getWidth() - fm2.stringWidth(scoreString))/2 , screen.getHeight()/3 + 50);
+             g.setColor(Color.white);
+             g.setFont(small);
+             g.drawString(s2, (screen.getWidth() - fm2.stringWidth(s2))/2, screen.getHeight()/2 + 100);
+             g.setColor(Color.white);
+             g.setFont(small);
+             g.drawString(s3, (screen.getWidth() - fm2.stringWidth(s3))/2, screen.getHeight()/2 + 150);
+             
         }
         
     }
@@ -402,6 +437,7 @@ public class GameEngine extends GameCore
                 player.setY(badguy.getY() - player.getHeight());
                 player.jump(true);
                 st.playMusic("audio/stomp.wav");
+                score = score + 100; 
                 
             } else {
                 // player dies!
@@ -409,6 +445,7 @@ public class GameEngine extends GameCore
                 numLives--;
                 st.stopMusic();
                 st.playMusic("audio/marioDies.wav");
+                
                 
 
                 if(numLives==0) {
@@ -438,6 +475,7 @@ public class GameEngine extends GameCore
         if (powerUp instanceof PowerUp.Star) {
             // do something here, like give the player points
             collectedStars++;
+            st.playMusic("audio/coin.wav");
             //if(collectedStars==100)
             if(collectedStars==20)
             {
@@ -452,6 +490,7 @@ public class GameEngine extends GameCore
             // advance to next map      
       
             map = mapLoader.loadNextMap();
+           
             
         }
     }

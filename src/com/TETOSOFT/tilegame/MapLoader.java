@@ -104,10 +104,10 @@ public class MapLoader
                 if (currentMap == 2) 
                 {
                     // no maps to load!
-                    return null;
+                    //return null;
                 }
-                  currentMap = 0;
-                map = null;
+                //currentMap = 0;
+                //map = null;
             }
         }
 
@@ -253,9 +253,9 @@ public class MapLoader
 
         // load left-facing images
         images[0] = new Image[] {
-            //loadImage("super_mario_player.png"),
-            //loadImage("player2.png"),
-            loadImage(GameMenu.playerChoosed),
+            loadImage("super_mario_player.png"),
+            loadImage("player2.png"),
+            //loadImage(GameMenu.playerChoosed),
             loadImage("fly1.png"),
             loadImage("fly2.png"),
             loadImage("fly3.png"),
