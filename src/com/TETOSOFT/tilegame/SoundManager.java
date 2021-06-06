@@ -11,6 +11,7 @@ import javax.sound.sampled.Clip;
 public class SoundManager {
 	
 	Clip clip;
+
 	
 	public void playMusic(String filepath) {
 		
@@ -37,7 +38,10 @@ public class SoundManager {
 		clip.stop();
 	}
 	
-	public void loopMusic() {
+	public void loopMusic(String filepath) {
+		
+		playMusic(filepath);
+		
 		 try {
              if (clip != null) {
                  new Thread() {

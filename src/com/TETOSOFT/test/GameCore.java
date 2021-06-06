@@ -1,7 +1,10 @@
 package com.TETOSOFT.test;
 
 import java.awt.*;
+
+import javax.script.ScriptEngine;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 import com.TETOSOFT.graphics.ScreenManager;
 
@@ -12,6 +15,7 @@ import com.TETOSOFT.graphics.ScreenManager;
 public abstract class GameCore {
 
     protected static final int FONT_SIZE = 18;
+    
 
     private static final DisplayMode POSSIBLE_MODES[] = {
         new DisplayMode(800, 600, 32, 0),
@@ -25,7 +29,7 @@ public abstract class GameCore {
         new DisplayMode(1024, 768, 24, 0),
     };
 
-    private boolean isRunning;
+    protected boolean isRunning;
     protected ScreenManager screen;
 
 
@@ -34,6 +38,8 @@ public abstract class GameCore {
     */
     public void stop() {
         isRunning = false;
+        screen.restoreScreen();
+        lazilyExit();
     }
 
 
@@ -46,8 +52,8 @@ public abstract class GameCore {
             gameLoop();
         }
         finally {
-            screen.restoreScreen();
-            lazilyExit();
+           //screen.restoreScreen();
+           //lazilyExit();
         }
     }
 
@@ -90,6 +96,8 @@ public abstract class GameCore {
         window.setFont(new Font("Dialog", Font.PLAIN, FONT_SIZE));
         window.setBackground(Color.BLACK);
         window.setForeground(Color.WHITE);
+        
+        
 
         isRunning = true;
     }
@@ -126,7 +134,10 @@ public abstract class GameCore {
                 Thread.sleep(20);
             }
             catch (InterruptedException ex) { }*/
+            
         }
+        
+       
     }
 
 
@@ -137,6 +148,8 @@ public abstract class GameCore {
     public void update(long elapsedTime) {
         // do nothing
     }
+    
+    
 
 
     /**

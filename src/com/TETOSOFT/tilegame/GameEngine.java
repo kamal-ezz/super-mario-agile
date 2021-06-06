@@ -34,10 +34,26 @@ public class GameEngine extends GameCore
     private GameAction moveRight;
     private GameAction jump;
     private GameAction exit;
+    private GameAction restart;
     private int collectedStars=0;
     private int numLives=6;
    
     SoundManager st = new SoundManager();
+    private Boolean gameover = false;
+    
+    
+    public void startGame() {
+      	 // start resource manager
+          mapLoader = new MapLoader(screen.getFullScreenWindow().getGraphicsConfiguration());
+          
+          // load resources
+          drawer = new TileMapDrawer();
+          drawer.setBackground(mapLoader.loadImage("background.jpg"));
+          
+          
+          // load first map
+          map = mapLoader.loadNextMap();
+      }
     
     public void init()
     {
@@ -47,20 +63,11 @@ public class GameEngine extends GameCore
         initInput();
         
        
-        st.playMusic("audio/background.wav");
+        st.loopMusic("audio/background.wav");
         
         //Sound.background.loop();
-        
-        // start resource manager
-        mapLoader = new MapLoader(screen.getFullScreenWindow().getGraphicsConfiguration());
-        
-        // load resources
-        drawer = new TileMapDrawer();
-        drawer.setBackground(mapLoader.loadImage("background.jpg"));
-        
-        
-        // load first map
-        map = mapLoader.loadNextMap();
+        startGame();
+       
     }
     
     
@@ -78,6 +85,7 @@ public class GameEngine extends GameCore
         moveRight = new GameAction("moveRight");
         jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
         exit = new GameAction("exit",GameAction.DETECT_INITAL_PRESS_ONLY);
+        restart = new GameAction("restart",GameAction.DETECT_INITAL_PRESS_ONLY);
         
         inputManager = new InputManager(screen.getFullScreenWindow());
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
@@ -86,6 +94,7 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(restart, KeyEvent.VK_R);
         
         
     }
@@ -96,6 +105,10 @@ public class GameEngine extends GameCore
         
         if (exit.isPressed()) {
             stop();
+        }
+        
+        if(restart.isPressed()) {
+        	startGame();
         }
         
         Player player = (Player)map.getPlayer();
@@ -112,12 +125,14 @@ public class GameEngine extends GameCore
             if (jump.isPressed()) {
                 player.jump(false);
                 st.playMusic("audio/jump.wav");
-                st.stopMusic();
             }
             player.setVelocityX(velocityX);
         }
         
     }
+    
+    
+   
     
     
     public void draw(Graphics2D g) {
@@ -131,6 +146,24 @@ public class GameEngine extends GameCore
         g.drawString("Lives: "+(numLives),500.0f,20.0f );
         g.setColor(Color.WHITE);
         g.drawString("Home: "+mapLoader.currentMap,700.0f,20.0f);
+        
+        if(gameover) {
+     	   
+            g.setColor(Color.black);
+            g.fillRect(0, 0, screen.getWidth(), screen.getHeight());
+            Font big = new Font("Helvetica", Font.BOLD, 50);
+            Font small = new Font("Helvetica", Font.BOLD, 20);
+            g.setColor(Color.white);
+            g.setFont(big);
+            g.drawString("Game Over", screen.getWidth()/3, screen.getHeight()/2);
+            g.setColor(Color.white);
+            g.setFont(small);
+            g.drawString("Press R to Restart", screen.getWidth()/3, screen.getHeight()/2 + 50);
+            g.setColor(Color.white);
+            g.setFont(small);
+            g.drawString("Press ESC to Exit", screen.getWidth()/3, screen.getHeight()/2 + 100);
+            
+        }
         
     }
     
@@ -358,6 +391,7 @@ public class GameEngine extends GameCore
                 badguy.setState(Creature.STATE_DYING);
                 player.setY(badguy.getY() - player.getHeight());
                 player.jump(true);
+                st.playMusic("audio/stomp.wav");
                 
             } else {
                 // player dies!
@@ -366,13 +400,6 @@ public class GameEngine extends GameCore
                 st.stopMusic();
                 st.playMusic("audio/marioDies.wav");
                 
-                
-                try {
-                	Thread.sleep(4000);
-                	st.playMusic("audio/background.wav");
-                }catch(InterruptedException ex) {
-                	ex.printStackTrace();
-                }
              
         
                 if(numLives==0) {
@@ -382,7 +409,8 @@ public class GameEngine extends GameCore
                         ex.printStackTrace();
                     }
                     st.stopMusic();
-                    stop();
+                    gameover = false;
+                    //stop();
                 }
             }
         }
