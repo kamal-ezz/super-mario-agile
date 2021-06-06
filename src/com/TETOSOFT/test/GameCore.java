@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import com.TETOSOFT.graphics.ScreenManager;
+import com.TETOSOFT.tilegame.SoundManager;
 
 /**
     Simple abstract class used for testing. Subclasses should

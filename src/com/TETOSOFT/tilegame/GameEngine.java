@@ -40,8 +40,8 @@ public class GameEngine extends GameCore
    
     SoundManager st = new SoundManager();
     private Boolean gameover = false;
-    
-    
+
+
     public void startGame() {
       	 // start resource manager
           mapLoader = new MapLoader(screen.getFullScreenWindow().getGraphicsConfiguration());
@@ -61,10 +61,9 @@ public class GameEngine extends GameCore
         
         // set up input manager
         initInput();
-        
-       
+
         st.loopMusic("audio/background.wav");
-        
+
         //Sound.background.loop();
         startGame();
        
@@ -96,7 +95,6 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
         inputManager.mapToKey(restart, KeyEvent.VK_R);
         
-        
     }
     
     
@@ -108,7 +106,9 @@ public class GameEngine extends GameCore
         }
         
         if(restart.isPressed()) {
-        	startGame();
+        	//startGame();
+
+            new GameEngine().run();
         }
         
         Player player = (Player)map.getPlayer();
@@ -145,10 +145,10 @@ public class GameEngine extends GameCore
         g.setColor(Color.YELLOW);
         g.drawString("Lives: "+(numLives),500.0f,20.0f );
         g.setColor(Color.WHITE);
-        g.drawString("Home: "+mapLoader.currentMap,700.0f,20.0f);
+        g.drawString("Level: "+mapLoader.currentMap,700.0f,20.0f);
         
         if(gameover) {
-     	   
+
             g.setColor(Color.black);
             g.fillRect(0, 0, screen.getWidth(), screen.getHeight());
             Font big = new Font("Helvetica", Font.BOLD, 50);
@@ -400,8 +400,7 @@ public class GameEngine extends GameCore
                 st.stopMusic();
                 st.playMusic("audio/marioDies.wav");
                 
-             
-        
+
                 if(numLives==0) {
                     try {
                         Thread.sleep(3000);
@@ -409,7 +408,8 @@ public class GameEngine extends GameCore
                         ex.printStackTrace();
                     }
                     st.stopMusic();
-                    gameover = false;
+                    //gameover = false;
+                    gameover= true;
                     //stop();
                 }
             }
@@ -429,7 +429,7 @@ public class GameEngine extends GameCore
             // do something here, like give the player points
             collectedStars++;
             //if(collectedStars==100)
-            if(collectedStars==8)
+            if(collectedStars==20)
             {
                 numLives++;
                 collectedStars=0;

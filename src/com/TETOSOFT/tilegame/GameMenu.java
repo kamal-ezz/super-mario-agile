@@ -1,6 +1,5 @@
 package com.TETOSOFT.tilegame;
 
-import com.TETOSOFT.tilegame.GameEngine;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -26,51 +25,87 @@ import java.nio.file.Paths;
 
 public class GameMenu extends Application {
 
+    //static Boolean isOption = false;
+    //static Stage stage;
+
+    static String playerChoosed = "super_mario_player.png";
+
     private GameMenuClass gameMenuClass;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        System.out.println("ENTERED TO START");
+       /* if(isOption){
+            System.out.println("ENTERED TO START");
+        }else{*/
 
-        Pane root = new Pane();
-        root.setPrefSize(800,600);
+            Pane root = new Pane();
+            root.setPrefSize(800,600);
 
-        //InputStream is = Files.newInputStream(Paths.get("images/menu_background.jpg"));
-        InputStream is = Files.newInputStream(Paths.get("images/background.jpg"));
-        Image menuBg = new Image(is);
-        is.close();
+            //InputStream is = Files.newInputStream(Paths.get("images/menu_background.jpg"));
+            InputStream is = Files.newInputStream(Paths.get("images/background.jpg"));
+            Image menuBg = new Image(is);
+            is.close();
 
-        ImageView menuBgImgView = new ImageView(menuBg);
-        menuBgImgView.setFitWidth(800);
-        menuBgImgView.setFitHeight(600);
+            ImageView menuBgImgView = new ImageView(menuBg);
+            menuBgImgView.setFitWidth(800);
+            menuBgImgView.setFitHeight(600);
 
-        gameMenuClass = new GameMenuClass();
+            gameMenuClass = new GameMenuClass();
 
-        root.getChildren().addAll(menuBgImgView, gameMenuClass);
+            root.getChildren().addAll(menuBgImgView, gameMenuClass);
 
-        Scene scene = new Scene(root);
+            Scene scene = new Scene(root);
 
-        primaryStage.setScene(scene);
-        primaryStage.show();
+            primaryStage.setScene(scene);
+            primaryStage.show();
 
+            //stage = primaryStage;
+        //}
     }
 
     private class GameMenuClass extends Parent {
+
+        public void switchMenu(VBox menu1, VBox menu2, long offset){
+
+            getChildren().add(menu2);
+
+            //Translate Main Menu
+            TranslateTransition tt = new TranslateTransition(Duration.seconds(0.25), menu1);
+            tt.setToX(menu1.getTranslateX() - offset);
+
+            //Bring the Options Menu to the main menu place
+            TranslateTransition tt1 = new TranslateTransition(Duration.seconds(0.5), menu2);
+            tt1.setToX(menu1.getTranslateX());
+
+            tt.play();
+            tt1.play();
+
+            tt.setOnFinished(evt -> {
+                getChildren().remove(menu1);
+            });
+
+        }
 
         public GameMenuClass(){
 
             VBox mainMenu = new VBox(10);
             VBox optionsMenu = new VBox(10);
 
+            VBox choiceMenu = new VBox(10);
+
             mainMenu.setTranslateX(100);
             mainMenu.setTranslateY(200);
             optionsMenu.setTranslateX(100);
             optionsMenu.setTranslateY(250);
 
+            choiceMenu.setTranslateX(100);
+            choiceMenu.setTranslateY(250);
+
             final int offset = 400;
 
             optionsMenu.setTranslateX(offset);
+            choiceMenu.setTranslateX(offset);
 
             MenuButton btnPlay = new MenuButton("PLAY");
             btnPlay.setOnMouseClicked(event -> {
@@ -81,22 +116,8 @@ public class GameMenu extends Application {
             MenuButton btnOptions = new MenuButton("OPTIONS");
             btnOptions.setOnMouseClicked(event -> {
 
-                getChildren().add(optionsMenu);
+                switchMenu(mainMenu, optionsMenu, offset);
 
-                //Translate Main Menu
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.25), mainMenu);
-                tt.setToX(mainMenu.getTranslateX() - offset);
-
-                //Bring the Options Menu to the main menu place
-                TranslateTransition tt1 = new TranslateTransition(Duration.seconds(0.5), optionsMenu);
-                tt1.setToX(mainMenu.getTranslateX());
-
-                tt.play();
-                tt1.play();
-
-                tt.setOnFinished(evt -> {
-                    getChildren().remove(mainMenu);
-                });
             });
 
             MenuButton btnExit = new MenuButton("EXIT");
@@ -129,15 +150,37 @@ public class GameMenu extends Application {
 
             });
 
-            MenuButton btnSound = new MenuButton("SOUND");
-            btnSound.setOnMouseClicked(event -> {
+            MenuButton btnChoosePlayer = new MenuButton("CHOOSE PLAYER");
+            btnChoosePlayer.setOnMouseClicked(event -> {
 
-                //Change Volume
+                switchMenu(optionsMenu, choiceMenu, offset);
+
+                /*isOption = false;
+                try {
+                    new GameMenu().start(stage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
 
             });
 
+            optionsMenu.getChildren().addAll(btnBack, btnChoosePlayer);
 
-            optionsMenu.getChildren().addAll(btnBack, btnSound);
+            MenuButton smPlayer= new MenuButton("MARIO");
+            smPlayer.setOnMouseClicked(event -> {
+
+                playerChoosed = "super_mario_player.png";
+                new GameEngine().run();
+            });
+
+            MenuButton scPlayer = new MenuButton("SCHTROUMPF");
+            scPlayer.setOnMouseClicked(event -> {
+
+                playerChoosed = "player2.png";
+                new GameEngine().run();
+            });
+
+            choiceMenu.getChildren().addAll(smPlayer, scPlayer);
 
             Rectangle bg = new Rectangle(800,600);
             bg.setFill(Color.GRAY);

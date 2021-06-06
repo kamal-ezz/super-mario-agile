@@ -253,8 +253,9 @@ public class MapLoader
 
         // load left-facing images
         images[0] = new Image[] {
-            //loadImage("player.png"),
-            loadImage("player2.png"),
+            //loadImage("super_mario_player.png"),
+            //loadImage("player2.png"),
+            loadImage(GameMenu.playerChoosed),
             loadImage("fly1.png"),
             loadImage("fly2.png"),
             loadImage("fly3.png"),
@@ -333,11 +334,12 @@ public class MapLoader
 
         // create "star" sprite
         anim = new Animation();
-        anim.addFrame(loadImage("coin1.png"),250 ) ;  
+        /*anim.addFrame(loadImage("coin1.png"),250 ) ;
         anim.addFrame(loadImage("coin2.png"),250);
         anim.addFrame(loadImage("coin3.png"),250);
         anim.addFrame(loadImage("coin4.png"),250);
-        anim.addFrame(loadImage("coin5.png"),250);
+        anim.addFrame(loadImage("coin5.png"),250);*/
+        anim.addFrame(loadImage("coin.png"),250);
         coinSprite = new PowerUp.Star(anim);
 
         // create "music" sprite
